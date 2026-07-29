@@ -5,6 +5,7 @@ from sqlalchemy import DateTime
 from sqlalchemy.dialects.mssql import UNIQUEIDENTIFIER
 from sqlalchemy.orm import Mapped, mapped_column
 from sqlalchemy.sql import func
+from sqlalchemy import text
 
 
 class UUIDMixin:
@@ -28,12 +29,11 @@ class TimestampMixin:
     created_at: Mapped[datetime] = mapped_column(
         "CreatedAt",
         DateTime,
-        server_default=func.now(),
+        server_default=text("GETDATE()"),
     )
 
     updated_at: Mapped[datetime] = mapped_column(
         "UpdatedAt",
         DateTime,
-        server_default=func.now(),
-        onupdate=func.now(),
+        server_default=text("GETDATE()"),
     )
