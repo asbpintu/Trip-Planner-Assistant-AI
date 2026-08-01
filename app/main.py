@@ -1,6 +1,7 @@
 from fastapi import FastAPI
 
-from app.api.v1.router import router
+from app.modules.system.router import router
+from app.modules.trip.router import router as trip_router
 from app.core.config import settings
 
 app = FastAPI(
@@ -12,6 +13,12 @@ app = FastAPI(
 app.include_router(
     router,
     prefix="/api/v1",
+)
+
+app.include_router(
+    trip_router,
+    prefix="/api/v1/trips",
+    tags=["Trips"],
 )
 
 
