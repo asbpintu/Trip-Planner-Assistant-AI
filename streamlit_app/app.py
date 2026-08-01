@@ -160,37 +160,17 @@ if "trip" in st.session_state:
 
     st.divider()
 
-    st.header(
-        f"🌍 {trip['destination'].title()}, {trip['destination_country'].title()}"
+    st.header(trip["title"])
+
+    st.caption(
+        f"📍 {trip['destination'].title()}, {trip['destination_country'].title()}"
     )
 
-    st.subheader(trip["title"])
-
-    c1, c2, c3, c4 = st.columns(4)
-
-    with c1:
-        st.metric(
-            "📅 Duration",
-            f"{trip['duration_days']} Days",
-        )
-
-    with c2:
-        st.metric(
-            "👥 Travelers",
-            trip["travelers"],
-        )
-
-    with c3:
-        st.metric(
-            "💰 Budget",
-            f"{trip['budget']} {trip['currency']}",
-        )
-
-    with c4:
-        st.metric(
-            "🚦 Status",
-            trip["status"],
-        )
+    col1, col2, col3, col4 = st.columns(4)
+    col1.metric("📅 Duration", f"{trip['duration_days']} Days")
+    col2.metric("👥 Travelers", trip["travelers"])
+    col3.metric("💰 Budget", f"{trip['budget']} {trip['currency']}")
+    col4.metric("🚦 Status", trip["status"])
 
     st.divider()
 
@@ -239,6 +219,10 @@ if "trip" in st.session_state:
 **📍 Location**
 
 {activity.get("location", "")}
+
+**📝 Description**
+
+{activity.get("description", "")}
 
 **💰 Estimated Cost**
 

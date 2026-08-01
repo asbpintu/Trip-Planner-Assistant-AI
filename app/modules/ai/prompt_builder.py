@@ -46,28 +46,29 @@ Return ONLY valid JSON.
 The JSON format should be:
 
 {{
-  "summary": "...",
-  "estimated_budget": "...",
-  "best_time_to_visit": "...",
-  "packing_tips": [
-    ...
-  ],
-  "important_notes": [
-    ...
-  ],
+  "summary": "5–6 line overview of the complete trip",
+
   "days": [
     {{
       "day": 1,
-      "title": "...",
+      "title": "Arrival and Beach Relaxation",
+      "overview": "2–3 lines describing the theme and highlights of the day.",
+
       "activities": [
         {{
           "time": "09:00",
-          "activity": "...",
-          "location": "...",
-          "estimated_cost": "..."
+          "activity": "Relax on Candolim Beach",
+          "location": "Candolim Beach, Goa",
+          "description": "2–4 lines explaining why this place is famous and what visitors can enjoy.",
+          "estimated_cost": "0 USD"
         }}
       ]
     }}
-  ]
+  ],
+
+  "packing_tips": [],
+  "estimated_budget": "...",
+  "best_time_to_visit": "...",
+  "important_notes": []
 }}
 """
