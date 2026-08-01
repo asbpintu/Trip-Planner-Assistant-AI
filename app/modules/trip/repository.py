@@ -43,3 +43,8 @@ class TripRepository:
         )
 
         return self.db.scalar(statement)
+
+    def update(self, trip: Trip) -> Trip:
+        self.db.commit()
+        self.db.refresh(trip)
+        return trip

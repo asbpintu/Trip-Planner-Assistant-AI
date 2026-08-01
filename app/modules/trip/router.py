@@ -68,3 +68,19 @@ def get_trip(
         )
 
     return trip
+
+
+@router.post(
+    "/{public_id}/generate",
+    response_model=TripResponse,
+)
+def generate_trip(
+    public_id: UUID,
+    db: Session = Depends(get_db),
+):
+
+    repository = TripRepository(db)
+
+    service = TripService(repository)
+
+    return service.generate_itinerary(public_id)

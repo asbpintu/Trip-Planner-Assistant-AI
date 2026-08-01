@@ -32,3 +32,6 @@ alembic/versions/*.pyc
 
 # Project Structure
 project_structure.py
+
+# Returns
+returns.md
