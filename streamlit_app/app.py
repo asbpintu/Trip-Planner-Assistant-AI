@@ -1,10 +1,8 @@
 import json
 
 import streamlit as st
-
 from api import TripAPI
 from ui import header, page_config
-
 
 page_config()
 header()
@@ -197,6 +195,9 @@ if "trip" in st.session_state:
             f"Day {day.get('day')} - {day.get('title')}",
             expanded=(day.get("day") == 1),
         ):
+
+            if day.get("overview"):
+                st.caption(day["overview"])
 
             activities = day.get("activities", [])
 

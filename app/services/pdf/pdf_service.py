@@ -1,5 +1,6 @@
 import json
 from pathlib import Path
+from xml.sax.saxutils import escape
 
 from reportlab.lib.colors import HexColor
 from reportlab.lib.enums import TA_CENTER
@@ -33,6 +34,14 @@ class PDFService:
             spaceAfter=20,
         )
 
+        self.subtitle_style = ParagraphStyle(
+            "SubtitleStyle",
+            parent=self.styles["Heading2"],
+            alignment=TA_CENTER,
+            textColor=HexColor("#334155"),
+            spaceAfter=8,
+        )
+
         self.heading_style = ParagraphStyle(
             "HeadingStyle",
             parent=self.styles["Heading2"],
@@ -49,7 +58,23 @@ class PDFService:
             spaceAfter=5,
         )
 
-        self.normal_style = self.styles["BodyText"]
+        self.activity_style = ParagraphStyle(
+            "ActivityStyle",
+            parent=self.styles["Heading3"],
+            textColor=HexColor("#1E3A8A"),
+            spaceBefore=5,
+            spaceAfter=4,
+        )
+
+        self.normal_style = ParagraphStyle(
+            "BodyTextStyle",
+            parent=self.styles["BodyText"],
+            leading=14,
+        )
+
+    @staticmethod
+    def _safe_text(value: object) -> str:
+        return escape(str(value if value is not None else "")).replace("\n", "<br/>")
 
     def generate_trip_pdf(self, trip: Trip) -> Path:
 
@@ -73,15 +98,15 @@ class PDFService:
 
         story.append(
             Paragraph(
-                "🌍 Trip Planner Assistant AI",
+                "Trip Planner Assistant AI",
                 self.title_style,
             )
         )
 
         story.append(
             Paragraph(
-                "<b>AI Generated Travel Itinerary</b>",
-                self.styles["Heading2"],
+                "Personalized Travel Itinerary",
+                self.subtitle_style,
             )
         )
 
@@ -98,14 +123,21 @@ class PDFService:
             )
         )
 
-        info = f"""
-        <b>Title:</b> {trip.title}<br/>
-        <b>Destination:</b> {trip.destination}, {trip.destination_country}<br/>
-        <b>Duration:</b> {trip.duration_days} Days<br/>
-        <b>Travelers:</b> {trip.travelers}<br/>
-        <b>Budget:</b> {trip.budget} {trip.currency}<br/>
-        <b>Trip Type:</b> {trip.trip_type.title()}<br/>
-        """
+        info = "<br/>".join(
+            [
+                f"<b>Title:</b> {self._safe_text(trip.title)}",
+                f"<b>Destination:</b> {self._safe_text(trip.destination)}, "
+                f"{self._safe_text(trip.destination_country)}",
+                f"<b>Travel dates:</b> {self._safe_text(trip.start_date)} to "
+                f"{self._safe_text(trip.end_date)}",
+                f"<b>Duration:</b> {self._safe_text(trip.duration_days)} days",
+                f"<b>Travelers:</b> {self._safe_text(trip.travelers)}",
+                f"<b>Budget:</b> {self._safe_text(trip.budget)} "
+                f"{self._safe_text(trip.currency)}",
+                f"<b>Trip type:</b> "
+                f"{self._safe_text(trip.trip_type.title())}",
+            ]
+        )
 
         story.append(
             Paragraph(
@@ -129,10 +161,26 @@ class PDFService:
 
         story.append(
             Paragraph(
-                itinerary.get("summary", ""),
+                self._safe_text(itinerary.get("summary", "")),
                 self.normal_style,
             )
         )
+
+        planning_details = []
+        if itinerary.get("estimated_budget"):
+            planning_details.append(
+                f"<b>Estimated trip budget:</b> "
+                f"{self._safe_text(itinerary['estimated_budget'])}"
+            )
+        if itinerary.get("best_time_to_visit"):
+            planning_details.append(
+                f"<b>Best time to visit:</b> "
+                f"{self._safe_text(itinerary['best_time_to_visit'])}"
+            )
+
+        if planning_details:
+            story.append(Spacer(1, 8))
+            story.append(Paragraph("<br/>".join(planning_details), self.normal_style))
 
         story.append(Spacer(1, 20))
 
@@ -151,7 +199,8 @@ class PDFService:
 
             story.append(
                 Paragraph(
-                    f"Day {day['day']} - {day['title']}",
+                    f"Day {self._safe_text(day.get('day', ''))} - "
+                    f"{self._safe_text(day.get('title', ''))}",
                     self.sub_heading_style,
                 )
             )
@@ -160,23 +209,31 @@ class PDFService:
 
                 story.append(
                     Paragraph(
-                        day["overview"],
+                        self._safe_text(day["overview"]),
                         self.normal_style,
                     )
                 )
 
                 story.append(Spacer(1, 8))
 
-            for activity in day.get("activities", []):
+            for index, activity in enumerate(day.get("activities", []), start=1):
 
-                activity_text = f"""
-                <b>Time:</b> {activity['time']}<br/>
-                <b>Activity:</b> {activity['activity']}<br/>
-                <b>Location:</b> {activity['location']}<br/>
-                <b>Description:</b><br/>
-                {activity['description']}<br/>
-                <b>Estimated Cost:</b> {activity['estimated_cost']}
-                """
+                story.append(
+                    Paragraph(
+                        f"{index}. {self._safe_text(activity.get('time', ''))} "
+                        f"- {self._safe_text(activity.get('activity', ''))}",
+                        self.activity_style,
+                    )
+                )
+
+                activity_text = (
+                    f"<b>Location:</b> "
+                    f"{self._safe_text(activity.get('location', ''))}<br/>"
+                    f"<b>Details:</b> "
+                    f"{self._safe_text(activity.get('description', ''))}<br/>"
+                    f"<b>Estimated cost:</b> "
+                    f"{self._safe_text(activity.get('estimated_cost', ''))}"
+                )
 
                 story.append(
                     Paragraph(
@@ -208,7 +265,7 @@ class PDFService:
 
                 story.append(
                     Paragraph(
-                        f"• {item}",
+                        f"• {self._safe_text(item)}",
                         self.normal_style,
                     )
                 )
@@ -234,7 +291,7 @@ class PDFService:
 
                 story.append(
                     Paragraph(
-                        f"• {note}",
+                        f"• {self._safe_text(note)}",
                         self.normal_style,
                     )
                 )
