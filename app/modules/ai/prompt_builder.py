@@ -9,7 +9,10 @@ class PromptBuilder:
         return f"""
 You are an expert travel planner.
 
-Generate a detailed travel itinerary.
+Generate a concise, practical travel itinerary. Include exactly {trip.duration_days} days.
+For each day, include exactly 3 activities (morning, afternoon, evening). Keep each
+activity description to one short sentence and each overview to one sentence. Keep
+the entire response compact so it fits within the output limit.
 
 Destination:
 {trip.destination}
@@ -46,20 +49,20 @@ Return ONLY valid JSON.
 The JSON format should be:
 
 {{
-  "summary": "5–6 line overview of the complete trip",
+  "summary": "2–3 sentence overview of the complete trip",
 
   "days": [
     {{
       "day": 1,
       "title": "Arrival and Beach Relaxation",
-      "overview": "2–3 lines describing the theme and highlights of the day.",
+      "overview": "One sentence describing the theme and highlights of the day.",
 
       "activities": [
         {{
           "time": "09:00",
           "activity": "Relax on Candolim Beach",
           "location": "Candolim Beach, Goa",
-          "description": "2–4 lines explaining why this place is famous and what visitors can enjoy.",
+          "description": "One concise sentence about the activity.",
           "estimated_cost": "0 USD"
         }}
       ]

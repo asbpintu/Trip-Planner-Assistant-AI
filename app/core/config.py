@@ -18,6 +18,8 @@ class Settings(BaseSettings):
     DB_TRUSTED_CONNECTION: str = "yes"
 
     GROQ_API_KEY: str = ""
+    GROQ_MODEL: str = "openai/gpt-oss-20b"
+    GROQ_MODEL_FALLBACKS: str = "openai/gpt-oss-120b"
 
     LOG_LEVEL: str = "INFO"
 

@@ -50,15 +50,21 @@ class TripService:
 
         groq = GroqService()
 
-        response = groq.generate(prompt)
+        try:
+            response = groq.generate(prompt)
+        except Exception as exc:  # pragma: no cover - surfaced as HTTP errors
+            raise HTTPException(
+                status_code=502,
+                detail=f"Trip generation failed: {exc}",
+            ) from exc
 
         try:
             parsed = json.loads(response)
         except json.JSONDecodeError:
             raise HTTPException(
-                status_code=500,
-                detail="AI returned invalid JSON.",
-            )
+                status_code=502,
+                detail="AI provider returned an invalid itinerary response.",
+            ) from None
 
         trip.itinerary_json = json.dumps(
             parsed,
