@@ -26,6 +26,9 @@ def test_trip_prompt_requests_detailed_and_grounded_activity_plans():
     assert "exactly 2 numbered days and exactly 3 activities per day" in prompt
     assert "one activity in the morning, one in the afternoon, and one in the evening" in prompt
     assert "2-3 concise, informative sentences" in prompt
+    assert "what the specific place is known for" in prompt
+    assert "why it attracts visitors" in prompt
+    assert "3-4 professional, concise sentences" in prompt
     assert "venue, neighborhood or district, city, country" in prompt
     assert "Never invent street addresses" in prompt
     assert "Approximate cost in USD" in prompt

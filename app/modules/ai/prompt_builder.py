@@ -12,14 +12,17 @@ to the trip details below. Prioritize a practical pace, clear logistics, geograp
 and useful details over generic recommendations.
 
 Planning requirements:
-- Include exactly {trip.duration_days} numbered days and exactly 3 activities per day.
+- Include exactly {trip.duration_days} numbered days and exactly 2 to 4 activities per day.
 - Schedule one activity in the morning, one in the afternoon, and one in the evening.
 - Schedule activities in chronological order, with sensible start times and enough time
   for the experience and travel between locations. Group nearby places to avoid backtracking.
 - Make each day overview one concise sentence that explains its theme and flow.
 - Write each activity description as 2-3 concise, informative sentences (about 2-3 printed
-  lines). Explain what the traveler will do or see and include a useful practical detail
-  when relevant, such as a reservation, access, or transit consideration.
+  lines). Explain what the traveler can do there, what the specific place is known for,
+  what distinctive feature or experience is interesting, and why it attracts visitors.
+  Make the details specific to that location rather than repeating generic praise. If a
+  place is not widely famous, describe its real local character without inventing claims.
+  Include a useful practical detail when relevant, such as a reservation or transit tip.
 - Give each activity a useful location in the format "venue, neighborhood or district,
   city, country". Use specific, recognizable place names. Never invent street addresses,
   opening hours, travel times, or access rules; use a neighborhood and city if an exact
@@ -28,8 +31,10 @@ Planning requirements:
   stated budget. Do not present uncertain prices or logistics as guaranteed facts.
 - Use the requested currency for cost estimates and clearly mark them as estimates.
   Keep the overall budget realistic for all travelers and state what it includes.
-- Make the overall summary 2-3 professional sentences describing the destination, dates,
-  trip pace, and key experiences. Avoid vague promotional language and repeated details.
+- Make the overall summary 3-4 professional, concise sentences (roughly 3-4 printed lines)
+  describing the destination, travel dates, trip pace, and standout experiences. Explain
+  what makes this particular trip appealing without vague promotional language or repeated
+  details.
 - Keep packing tips and important notes specific to this destination and itinerary.
 - If an operational detail may change (for example, opening hours or availability), advise
   the traveler to confirm it before departure rather than guessing.
@@ -69,7 +74,7 @@ Return ONLY valid JSON.
 The JSON format should be:
 
 {{
-  "summary": "Professional 2-3 sentence overview of the complete trip",
+  "summary": "3-4 professional sentences on the destination, trip pace, dates, and highlights",
 
   "days": [
     {{
@@ -82,7 +87,7 @@ The JSON format should be:
           "time": "09:00",
           "activity": "A clear name for the scheduled experience",
           "location": "Named venue, neighborhood or district, city, country",
-          "description": "2-3 sentences covering the experience and practical tips.",
+          "description": "2-3 sentences on activities, significance, appeal, and tips.",
           "estimated_cost": "Approximate cost in {trip.currency}"
         }}
       ]
